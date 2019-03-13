@@ -2,7 +2,7 @@ node() {
     echo "Your Pipeline works!"
     //sh('ls -la')
     
-    Stage('Checkout SCM') {
+    stage('Checkout SCM') {
         checkout($class:'GitSCM')
         echo 'chk out done!' 
     }
