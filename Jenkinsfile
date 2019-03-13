@@ -9,23 +9,20 @@ node() {
     }
     
     stage('Build') {
-            steps {
-                echo 'Building..'
-                docker { image 'node:carbon-jessie' }
-            }
-        }
+        echo 'Building..'
+        docker { image 'node:carbon-jessie' }
+    }
+       
     
      stage('Test') {
-            steps {
-                echo 'Testing..'
-                sh('npm test')
-            }
-        }
+            echo 'Testing..'
+            sh('npm test')
+       }
+     
     
       stage('Deploy-push') {
-            steps {
+
                 echo 'Deploying....'
-            }
 
 }
 } 
