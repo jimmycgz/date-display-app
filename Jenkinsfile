@@ -3,7 +3,8 @@ node() {
     //sh('ls -la')
     
     stage('Checkout SCM') {
-        checkout($class:'GitSCM')
+        def scmVars = checkout scm
+        def commitHash = scmVars.GIT_COMMIT
         echo 'chk out done!' 
     }
     
