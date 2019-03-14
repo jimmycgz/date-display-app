@@ -1,25 +1,48 @@
 node() {
     echo "Your Pipeline works!"
     //sh('ls -la')
+    podTemplate(label: label, containers: [
+      containerTemplate(name: 'npm_j', image: 'node:carbon-jessie', command: 'npm test', ttyEnabled: true),
+      //containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+      //containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
+      //containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+    ],
     
+    def myRepo = checkout scm
+    def gitCommit = myRepo.GIT_COMMIT
+    def gitBranch = myRepo.GIT_BRANCH
+    def shortGitCommit = "${gitCommit[0..10]}"
+    def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+                
     stage('Checkout SCM') {
-        def scmVars = checkout scm
-        def commitHash = scmVars.GIT_COMMIT
+        def myRepo = checkout scm
+        def gitCommit = myRepo.GIT_COMMIT
+        def gitBranch = myRepo.GIT_BRANCH
         echo 'chk out done!' 
     }
-    
-    stage('Build') {
-        echo 'Building..'
-        docker { image 'node:carbon-jessie' }
-    }
-       
-    
+
      stage('Test') {
-            echo 'Testing..'
-            sh('npm test')
-       }
+      try {
+        container('npm_j') {
+          sh """
+            pwd
+            echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+            echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+            npm test
+            """
+        }
+      }
+      catch (exc) {
+        println "Failed to test - ${currentBuild.fullDisplayName}"
+        throw(exc)
+      }
+      }
      
-    
+     stage('Deploy-push') {
+         container('npm_j') {
+        sh "npm build"
+      }
+     }
       stage('Deploy-push') {
 
                 echo 'Deploying....'
