@@ -1,6 +1,6 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
-      containerTemplate(name: 'npmj', image: 'node:carbon-jessie', command: 'npm test', ttyEnabled: true)
+      containerTemplate(name: 'npmj', image: 'node:carbon-jessie', command: 'cat', ttyEnabled: true)
       //containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
       //containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
       //containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
@@ -28,9 +28,10 @@ node(label) {
         container('npmj') {
           sh """
             pwd
-            echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
-            echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
-            npm test
+           // echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+           // echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+            npm install
+			npm test
             """
         }
       }
@@ -40,35 +41,9 @@ node(label) {
       }
       }
      
-     stage('Build') {
-         container('npmj') {
-        sh "npm build"
-      }
-     }
+
       
-   stage('Create Docker images') {
-      container('npmj') {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-          credentialsId: 'dockerhub',
-          usernameVariable: 'DOCKER_HUB_USER',
-          passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-          sh """
-            docker login -u rremu -p duba!002
-            docker build -t namespace/my-image:${gitCommit} .
-            docker push namespace/my-image:${gitCommit}
-            """
-        }
-      }
-    } 
-    stage('Run kubectl') {
-      container('kubectl') {
-        sh "kubectl get pods"
-      }
-    }
-    stage('Run helm') {
-      container('helm') {
-        sh "helm list"
-      }
-    }
+
+
 } 
 } 
