@@ -50,8 +50,8 @@ node(label) {
       container('docker') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding',
           credentialsId: 'dockerhub',
-          //usernameVariable: 'DOCKER_HUB_USER',
-          //passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+          usernameVariable: 'DOCKER_HUB_USER',
+          passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
           sh """
             docker login -u rremu -p duba!002
             docker build -t namespace/my-image:${gitCommit} .
