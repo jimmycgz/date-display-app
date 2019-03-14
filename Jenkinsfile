@@ -25,13 +25,17 @@ node(label) {
         container('npmj') {
           sh """
 		 def myRepo = checkout scm
+		 env.GIT_COMMIT = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
 		 def gitCommit = myRepo.GIT_COMMIT
+		 echo env.GIT_COMMIT
 		 def gitBranch = myRepo.GIT_BRANCH
+		 echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+		 echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+		 
 		 echo 'chk out done!'
 		 pwd
 	    
-		 echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
-		 echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+
 		 npm install
 		 npm test
             """
