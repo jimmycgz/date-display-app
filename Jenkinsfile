@@ -17,24 +17,24 @@ node(label) {
     //def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
                 
     stage('Checkout SCM') {
- 
-    }
-
-     stage('Test') {
-      try {
-        container('npmj') {
-          sh """
-		 def myRepo = checkout scm
+	 def myRepo = checkout scm
 		 env.GIT_COMMIT = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
 		 def gitCommit = myRepo.GIT_COMMIT
 		 echo env.GIT_COMMIT
 		 def gitBranch = myRepo.GIT_BRANCH
 		 echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
 		 echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
-		 
-		 echo 'chk out done!'
+	     echo 'chk out done!'
+
+    }
+
+     stage('Test') {
+      try {
+        container('npmj') {
+          sh """
 		 pwd
 		 npm install
+		 npm test
 
             """
         }
