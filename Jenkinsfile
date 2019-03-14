@@ -40,15 +40,35 @@ node(label) {
       }
       }
      
-     stage('Deploy-push') {
+     stage('Build') {
          container('npmj') {
         sh "npm build"
       }
      }
-      stage('Deploy-push') {
-
-                echo 'Deploying....'
-
-}
+      
+   stage('Create Docker images') {
+      container('docker') {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding',
+          credentialsId: 'dockerhub',
+          //usernameVariable: 'DOCKER_HUB_USER',
+          //passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+          sh """
+            docker login -u rremu -p duba!002
+            docker build -t namespace/my-image:${gitCommit} .
+            docker push namespace/my-image:${gitCommit}
+            """
+        }
+      }
+    } 
+    stage('Run kubectl') {
+      container('kubectl') {
+        sh "kubectl get pods"
+      }
+    }
+    stage('Run helm') {
+      container('helm') {
+        sh "helm list"
+      }
+    }
 } 
 } 
