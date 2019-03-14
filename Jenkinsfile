@@ -22,9 +22,10 @@ node(label) {
 	  def gitCommit = myRepo.GIT_COMMIT
 	 echo env.GIT_COMMIT
 	 def gitBranch = myRepo.GIT_BRANCH
+	 echo "GIT_BRANCH=${gitBranch}"
 	 echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
 	 echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
-	  echo 'chk out done!'
+	 echo 'chk out done!'
 
     }
 
