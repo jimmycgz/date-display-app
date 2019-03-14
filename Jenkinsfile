@@ -13,8 +13,7 @@ node() {
     //def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
                 
     stage('Checkout SCM') {
-        def myRepo = checkout scm
-        def gitCommit = myRepo.GIT_COMMIT
+        def commitHash = checkout(scm).GIT_COMMIT
         def gitBranch = myRepo.GIT_BRANCH
         echo 'chk out done!' 
     }
