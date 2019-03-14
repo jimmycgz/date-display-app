@@ -34,10 +34,8 @@ node(label) {
 		 
 		 echo 'chk out done!'
 		 pwd
-	    
-
 		 npm install
-		 npm test
+
             """
         }
       }
