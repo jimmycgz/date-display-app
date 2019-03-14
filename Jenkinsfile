@@ -41,7 +41,7 @@ node(label) {
       }
      
      stage('Deploy-push') {
-         container('npm_j') {
+         container('npmj') {
         sh "npm build"
       }
      }
