@@ -2,7 +2,7 @@ node() {
     echo "Your Pipeline works!"
     //sh('ls -la')
     podTemplate(label: label, containers: [
-      containerTemplate(name: 'npm_j', image: 'node:carbon-jessie', command: 'npm test', ttyEnabled: true),
+      containerTemplate(name: 'npm_j', image: 'node:carbon-jessie', command: 'npm test', ttyEnabled: true))
       //containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
       //containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
       //containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
