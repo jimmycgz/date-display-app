@@ -47,7 +47,7 @@ node(label) {
      }
       
    stage('Create Docker images') {
-      container('docker') {
+      container('npmj') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding',
           credentialsId: 'dockerhub',
           usernameVariable: 'DOCKER_HUB_USER',
